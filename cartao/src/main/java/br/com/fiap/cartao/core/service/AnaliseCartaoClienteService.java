@@ -3,12 +3,15 @@ package br.com.fiap.cartao.core.service;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.fiap.cartao.core.entity.Cliente;
 import br.com.fiap.cartao.core.repository.ClienteRepository;
+import br.com.fiap.cartao.v1.dto.ClienteDTO;
 import br.com.fiap.cartao.v1.dto.ParecerDTO;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,14 +35,24 @@ public class AnaliseCartaoClienteService {
 
     }
 
+    public List<ClienteDTO> buscarTodosClientes() {
+
+        List<ClienteDTO> retorno = new ArrayList<>();
+
+        clienteRepository.findAll().forEach(c -> retorno.add(new ClienteDTO(c.getId(), c.getNome())));
+
+        return retorno;
+    }
+
     public ParecerDTO parecerValorLimite(Integer id) {
 
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(MessageFormat.format("Não foi encontrado cliente com o id {0}.", id)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        MessageFormat.format("Não foi encontrado cliente com o id {0}.", id)));
 
         if (cliente.getTemCadastroNegativado()) {
             return toDTO(cliente, BigDecimal.ZERO,
-                    "O cliente não tem limite de cartão liberado, pois encontra-se com o cadastro negativado");
+                    "O cliente não tem limite de cartão liberado, pois encontra-se com o cadastro negativado.");
 
         }
 
