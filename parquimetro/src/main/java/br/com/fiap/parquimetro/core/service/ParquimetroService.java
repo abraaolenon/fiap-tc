@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,11 @@ public class ParquimetroService {
         return toDTO(estacionamento);
     }
 
-    public List<EstacionamentoDTO> buscarTodosEstacionamentosPorParquimetro(Integer idParquimetro) {
+    @Cacheable("estacionamentos")
+    public List<EstacionamentoDTO> buscarTodosEstacionamentosPorParquimetro(Integer idParquimetro)
+            throws InterruptedException {
+
+        simularAtrasoDaConsulta();
 
         List<EstacionamentoDTO> retorno = new ArrayList<>();
 
@@ -41,6 +46,16 @@ public class ParquimetroService {
                         e.getDataHoraInicioEstacionamento(), e.getDataHoraFimEstacionamento())));
 
         return retorno;
+    }
+
+    private void simularAtrasoDaConsulta() throws InterruptedException {
+
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public EstacionamentoDTO finalizarEstacionamento(Integer idParquimetro, String placaVeiculo) {

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.parquimetro.core.service.ParquimetroService;
 import br.com.fiap.parquimetro.v1.dto.EstacionamentoDTO;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +25,9 @@ import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/v1/parquimetros")
-@Tag(name = "API para Parquimetros", description = "Gerencia o estacionamento dos veículos registrados no parquimetros")
-public class Parquimetros {
+@OpenAPIDefinition(info=@Info(title="Api de Parquímetros para o II Tech Challenge"))
+@Tag(name = "API para Parquímetros", description = "Gerencia o estacionamento dos veículos registrados no parquímetros")
+public class ParquimetrosController {
 
     @Autowired
     private ParquimetroService estacionamentoService;
@@ -43,7 +46,7 @@ public class Parquimetros {
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso") })
     @GetMapping(path = "/{id}/estacionamentos", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<EstacionamentoDTO>> buscarTodosEstacionamentosPorParquimetro(
-            @PathVariable Integer id) {
+            @PathVariable Integer id) throws InterruptedException {
 
         return ResponseEntity.ok(estacionamentoService.buscarTodosEstacionamentosPorParquimetro(id));
     }
