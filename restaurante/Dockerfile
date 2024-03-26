@@ -8,6 +8,6 @@ RUN mvn package
 
 FROM openjdk:17-jdk-slim
 
-COPY --from=build /app/target/*.jar /app/app.jar
+COPY --from=build /app/target/*.jar /app/restaurante-0.0.1-SNAPSHOT.jar
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./unrandom", "-jar", "/app/restaurante-0.0.1-SNAPSHOT.jar"]
