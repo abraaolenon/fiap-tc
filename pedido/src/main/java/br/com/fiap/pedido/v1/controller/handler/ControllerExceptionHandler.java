@@ -1,4 +1,4 @@
-package br.com.fiap.produto.v1.controller.handler;
+package br.com.fiap.pedido.v1.controller.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
